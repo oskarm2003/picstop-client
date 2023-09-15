@@ -1,0 +1,151 @@
+@import url('../../vars.less');
+@timing: 500ms;
+
+div.account {
+    background-color: @main-background-color;
+    position: absolute;
+    left: 50%;
+    top: 200%;
+    transform: translate(-50%, -50%);
+    width: 60rem;
+    height: 40rem;
+    border-radius: 1rem;
+    transform-style: preserve-3d;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    z-index: 1;
+    transition: all @timing;
+
+    * {
+        z-index: 1;
+    }
+
+    canvas {
+        background: transparent;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 0;
+    }
+
+    #mouse-follower {
+        position: absolute;
+        width: 20rem;
+        height: 20rem;
+        border-radius: 50%;
+        filter: blur(35rem);
+        z-index: 0;
+    }
+
+
+
+    .title {
+        position: absolute;
+        z-index: 2;
+        width: 50%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 770ms;
+        background-color: white;
+
+
+        h1 {
+            color: @main-font-color;
+            font-family: @header-font-family;
+            font-size: 5rem;
+            text-align: center;
+        }
+    }
+
+    .form {
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+}
+
+div.shadow {
+    display: block;
+    position: absolute;
+    width: 60rem;
+    height: 40rem;
+    left: 50%;
+    top: 200%;
+    transition: all @timing;
+    background-color: black;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    filter: blur(5rem);
+}
+
+div.account.register {
+
+    .title {
+        left: 50%;
+        animation: move-right 300ms;
+    }
+
+    .form {
+        left: 0%;
+        animation: move-left 300ms;
+    }
+
+    .title:hover {
+        background-color: #cf9f7f9f;
+    }
+
+    #mouse-follower {
+        background-color: #cf9f7faf;
+    }
+}
+
+div.account.login {
+    .form {
+        left: 50%;
+        animation: move-right 300ms;
+    }
+
+    .title {
+        left: 0%;
+        animation: move-left 300ms;
+    }
+
+    .title:hover {
+        background-color: #99aaff9f;
+    }
+
+    #mouse-follower {
+        background-color: #99aaffaf;
+    }
+}
+
+
+
+@keyframes move-right {
+    0% {
+        left: 0%;
+    }
+
+    100% {
+        left: 50%;
+    }
+}
+
+@keyframes move-left {
+    0% {
+        left: 50%;
+    }
+
+    100% {
+        left: 0%;
+    }
+}

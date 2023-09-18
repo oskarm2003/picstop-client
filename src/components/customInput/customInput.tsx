@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import './customInput.less'
 
-export default function CustomInput({ type, label, reference }: { type: 'password' | 'text', label: string, reference: React.RefObject<HTMLInputElement> }) {
+export default function CustomInput({ type, label, reference, onKeyDown }: { type: 'password' | 'text', label: string, reference: React.RefObject<HTMLInputElement>, onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void }) {
 
     const title = useRef<HTMLParagraphElement>(null)
 
@@ -19,7 +19,7 @@ export default function CustomInput({ type, label, reference }: { type: 'passwor
     return (
         <div className='input-container'>
             <p ref={title} className='in' onClick={whenClicked}>{label}</p><br />
-            <input onBlur={whenOutOfFocus} ref={reference} type={type} onClick={whenClicked} />
+            <input onKeyDown={(e) => onKeyDown(e)} onBlur={whenOutOfFocus} ref={reference} type={type} onFocus={whenClicked} />
         </div>
     )
 

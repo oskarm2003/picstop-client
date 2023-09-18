@@ -1,3 +1,26 @@
+@keyframes loading {
+    0% {
+        left: 0;
+    }
+
+    10% {
+        left: 0;
+    }
+
+    50% {
+        left: 100%;
+    }
+
+    60% {
+        left: 100%
+    }
+
+    100% {
+        left: 0;
+    }
+
+}
+
 .custom-button {
     margin: 2rem 1rem 1rem 1rem;
     width: 12.5rem;
@@ -8,12 +31,32 @@
     color: white;
     font-size: 1.2rem;
     transition: all 300ms;
+
 }
 
-.custom-button:hover {
+.custom-button.loading {
+    div {
+        width: 3rem;
+        aspect-ratio: 1;
+        background-color: #dfdfdf;
+        animation: loading 2s infinite;
+        border-radius: 10px;
+        position: relative;
+        transform: translate(-60%, -10%);
+        filter: blur(2rem)
+    }
+}
+
+.custom-button.active:hover {
     color: black;
     background-color: #dfdfdf;
     cursor: pointer
+}
+
+.custom-button:focus-visible {
+    background-color: #dfdfdf;
+    color: black;
+    outline: none;
 }
 
 .just-text {

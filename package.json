@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/fiber": "^8.14.2",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/three": "^0.156.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "redux": "^4.2.1"
+    "redux": "^4.2.1",
+    "three": "^0.156.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
@@ -26,7 +29,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "less": "^4.2.0",
-    "sass": "^1.66.1",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }

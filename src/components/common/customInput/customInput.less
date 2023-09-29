@@ -1,0 +1,44 @@
+@import url('../../../vars.less');
+
+.input-container {
+
+    margin: 1rem;
+    padding: 0;
+    font-family: @main-font-family;
+    position: relative;
+    height: 2rem;
+    width: 12.5rem;
+
+    input {
+        width: 12rem;
+        height: 2rem;
+        border-radius: 10px;
+        border: 1px solid #3f3f3f;
+        margin: 0;
+        background-color: #ffffff9f;
+        outline: none;
+        text-align: center;
+        font-size: 1.2rem;
+    }
+
+    input:focus {
+        background-color: #ffffffcf;
+        border-color: #8f8f8f;
+    }
+
+    p {
+        margin: 0;
+        position: absolute;
+        font-size: 1rem;
+        width: 100%;
+        text-align: center;
+        transition: all 200ms;
+        color: black;
+    }
+
+    p.in {
+        transform: translate(0, 1.5rem);
+        font-size: 1.2rem;
+        color: #3f3f3f;
+    }
+}

@@ -1,0 +1,106 @@
+@import url('../../../vars.less');
+
+.post-photo-form {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    * {
+        position: relative;
+        z-index: 1;
+    }
+
+    h1 {
+        font-family: @header-font-family;
+        color: black;
+        text-align: center;
+        padding: 4%;
+    }
+
+    input.file {
+        display: none;
+    }
+
+    .preview {
+        width: 70%;
+        border-radius: 10px;
+        aspect-ratio: 1;
+        border: 2px dashed black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #7f7f7f;
+        background-color: #ffffffaf;
+        overflow: hidden;
+
+        img {
+            position: relative;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .prompt {
+            background-color: #ffffff8f;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            padding: 1rem;
+            justify-content: center;
+            align-items: center;
+
+            p {
+                margin: 2rem;
+                color: #3f3f3f;
+                text-align: center;
+                text-wrap: wrap;
+                font-size: 2rem;
+                font-size: @main-font-family;
+            }
+        }
+    }
+
+    .preview.filled:hover {
+        cursor: grab
+    }
+
+    .preview:hover {
+        cursor: pointer;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .message {
+        font-size: 1.2rem;
+        font-family: @main-font-family;
+        animation: message-pop-up 700ms;
+    }
+
+}
+
+canvas.preview {
+    display: none;
+}
+
+@keyframes message-pop-up {
+
+    0%,
+    50% {
+        opacity: 0;
+    }
+
+    25%,
+    75% {
+        opacity: 1;
+    }
+}

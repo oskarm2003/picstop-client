@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import * as VARS from '../vars.json'
 
 /**
@@ -7,10 +8,15 @@ import * as VARS from '../vars.json'
  * @param password - password
  * @returns status text or token if response code 200
  */
-export default function login(login: string, password: string): Promise<'Not Found' | 'Unauthorized' | { token: string }> {
+type t_login_result = 'Not Found' | 'Unauthorized' | 'Error' | { token: string }
+export default function useLogin(): [undefined | t_login_result, (login: string, password: string) => void] {
 
-    return new Promise((resolve, reject) => {
+    const [response, setResponse] = useState<undefined | t_login_result>()
 
+    //authentication function
+    const authenticate = (login: string, password: string) => {
+
+        //prepare the data
         const data: { password: string, email?: string, username?: string } = {
             password: password
         }
@@ -23,15 +29,24 @@ export default function login(login: string, password: string): Promise<'Not Fou
             body: JSON.stringify(data)
         }
 
+        setResponse(undefined)
+
+        //make the request
         fetch(VARS.API_URL + '/user/login', options)
             .then(async response => {
                 if (response.statusText === 'OK') {
-                    resolve({ token: await response.text() })
+                    setResponse({ token: await response.text() })
                 }
                 else if (response.statusText === 'Not Found' || response.statusText === 'Unauthorized') {
-                    resolve(response.statusText)
+                    setResponse(response.statusText)
                 }
             })
-            .catch(err => reject(err))
-    })
+            .catch(err => {
+                console.error(err)
+                setResponse('Error')
+            })
+    }
+
+    return [response, authenticate]
+
 }

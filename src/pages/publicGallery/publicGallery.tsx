@@ -1,12 +1,14 @@
-import { useNavigate } from "react-router-dom"
+import Reel from "../../components/publicGallery/reel/reel"
+import './publicGallery.less'
+import UserPanel from "../../components/publicGallery/userPanel/userPanel"
 
 export default function PublicGallery() {
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    return <>
-        <h1>PUBLIC GALLERY</h1>
-        <button onClick={() => navigate('/')}>go back to login</button>
-    </>
+    return <div className='public-gallery'>
+        <UserPanel />
+        <Reel />
+    </div>
 
 }

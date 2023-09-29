@@ -1,0 +1,32 @@
+.slider {
+    position: absolute;
+    top: 90vh;
+    left: 50vw;
+    transform: translate(-50%);
+    height: 0.1rem;
+    width: 50vw;
+    background-color: #4f4f4f;
+    border-radius: 5rem;
+
+    .progress {
+        position: relative;
+        height: 0.6rem;
+        aspect-ratio: 1;
+        background-color: #afafaf;
+        border-radius: 3px;
+        transform: translate(-50%, calc(-50% + 0.05rem));
+    }
+
+    .progress:hover {
+        background-color: #dfdfdf;
+        height: 1rem;
+        transition: all 100ms;
+    }
+
+}
+
+@media (min-aspect-ratio: 7/5) {
+    .slider {
+        width: 30vw;
+    }
+}

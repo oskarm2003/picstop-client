@@ -2,7 +2,7 @@ export default class DottedBackground {
 
     //settings
     private static background_color = 'rgba(255,255,255,0)'
-    private static color = '#eee'
+    private color = '#eee'
     private static point_size = 3
     private static point_density = 80
     private repulsion_range = 0
@@ -11,11 +11,13 @@ export default class DottedBackground {
     private dimensions: [number, number]
     private memoized_background_args: [[number, number], [number, number]] = [[0, 0], [0, 0]]
 
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(canvas: HTMLCanvasElement, color?: string) {
 
         const context = canvas.getContext('2d')
         if (context === null) throw 'context not created'
         this.ctx = context
+
+        if (color) this.color = color
 
         this.dimensions = [canvas.width, canvas.height]
         this.drawBackground([0, 0], [0, 0])
@@ -64,7 +66,7 @@ export default class DottedBackground {
     private placePoint(x: number, y: number) {
 
         this.ctx.beginPath()
-        this.ctx.fillStyle = DottedBackground.color
+        this.ctx.fillStyle = this.color
         this.ctx.arc(x, y, DottedBackground.point_size, 0, 2 * Math.PI, false)
         this.ctx.fill()
 

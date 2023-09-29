@@ -1,6 +1,6 @@
 import './home.less'
-import HomeBackground from '../../components/background/homeBackground'
-import Login from '../../components/login/login'
+import HomeBackground from '../../components/home/background/homeBackground'
+import Login from '../../components/home/login/login'
 
 export default function Home() {
 

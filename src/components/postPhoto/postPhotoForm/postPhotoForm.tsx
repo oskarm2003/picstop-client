@@ -116,7 +116,7 @@ export default function PostPhotoForm({ buttonText, onSent }:
                 loading={loading}
             />
             <CustomInput type='text' label='photo title' reference={titleInput} onKeyDown={onKeyDown} />
-            <CustomButton text={buttonText} whenClicked={postFile} />
+            <CustomButton loading={loading} text={buttonText} whenClicked={postFile} />
             <p className={message.content === '' ? '' : 'message'} style={{ height: '2.5rem', color: message.color }}>{message.content}</p>
         </div>
     </>

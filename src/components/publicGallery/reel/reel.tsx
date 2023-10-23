@@ -1,12 +1,12 @@
 import './reel.less'
 import Photo from "../photo3D/photo"
-import useFetchRandomPhotos from '../../../net/get files/fetchRandomPhotos'
 import { t_photo_data } from '../../../types'
 import { Canvas } from '@react-three/fiber'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Slider from '../slider/slider'
 import Scroller from './scroller'
 import PhotoDetails from '../photoDetails/photoDescription'
+import useDrawUniquePhotos from '../../../net/get files/drawUniquePhotos'
 
 const PHOTO_DIMENSIONS: [number, number, number] = [5, 0, 6]
 const SPACE_BETWEEN_PHOTOS: number = 5
@@ -19,20 +19,66 @@ export default function Reel() {
     const [sliderProgress, setSliderProgress] = useState(0)
     const [sliderInDrag, setSliderInDrag] = useState(false)
     const [photoDetailsPosition, setPhotoDetailsPosition] = useState<[number, number] | null>(null)
+    const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+    const [photos, setPhotos] = useState<Array<t_photo_data>>([])
+    const [allow_fetch, setAllowFetch] = useState(true)
 
     const sliderReference = useRef<HTMLDivElement>(null)
 
-    const result = useFetchRandomPhotos(30)
-    let photos: Array<t_photo_data> = []
+    //fetch the photos
+    const [result, loading, all_fetched, drawUnique] = useDrawUniquePhotos()
 
-    if (result != undefined) {
-        photos = [...result]
-    }
+    //run on first render
+    useEffect(() => {
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            setTheme('light')
+        }
 
+        drawUnique(30)
+    }, [])
+
+    //update photos on fetch
+    useEffect(() => {
+        if (!Array.isArray(result) || result.length === 0) return
+        setPhotos([...photos, ...result])
+    }, [result])
+
+    //on reel position change
     useEffect(() => {
         const reelLenght = (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0]))
         setSliderProgress(-reelPosition / reelLenght)
+
+        //load more photos
+        if (sliderProgress > 0.9 && !loading && allow_fetch && !all_fetched) {
+            drawUnique(15)
+            setAllowFetch(false)
+        }
+        else if (sliderProgress <= 0.9) {
+            setAllowFetch(true)
+        }
+
     }, [reelPosition])
+
+    //set the photos to view
+    const photosElements = useMemo(() => {
+        const toMap = photos.slice(0, Math.floor(Math.abs(reelPosition / SPACE_BETWEEN_PHOTOS)) + 5)
+        return toMap.map((element, index) => {
+            //optimalization - view only in range
+            if (Math.abs(index * SPACE_BETWEEN_PHOTOS + reelPosition) > SPACE_BETWEEN_PHOTOS * 5) return
+            return <Photo
+                focused={index === focusedImage}
+                index={index}
+                tilt={index === focusedImage ? tilt : [0, -0.1]}
+                reelPosition={reelPosition}
+                key={index}
+                photo={element}
+                positionX={index * SPACE_BETWEEN_PHOTOS}
+                setFocusedImage={setFocusedImage}
+                dimensions={PHOTO_DIMENSIONS}
+                setPhotoDetailsPosition={setPhotoDetailsPosition}
+            />
+        })
+    }, [reelPosition, tilt])
 
     const onMouseMove = (e: React.MouseEvent<HTMLElement>) => {
         //set photo tilt
@@ -71,7 +117,7 @@ export default function Reel() {
 
     const scroller = new Scroller(0, (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0])))
     const scroll = (e: React.WheelEvent<HTMLDivElement>) => {
-        if ((sliderProgress < 0.01 && e.deltaY < 0) || (sliderProgress > 0.99 && e.deltaY > 0)) return
+        if ((sliderProgress < 0 && e.deltaY < 0) || (sliderProgress > 1 && e.deltaY > 0)) return
         //if no speed
         if (scroller.getSpeed() === 0) {
             scroller.addSpeed(Math.sign(e.deltaY) * 0.05)
@@ -83,23 +129,10 @@ export default function Reel() {
 
     return <div className="reel" onWheel={(e) => scroll(e)} onMouseMove={(e) => onSliderDrag(e)} onMouseUp={() => setSliderInDrag(false)}>
         <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} >
-            <ambientLight intensity={0.1} />
-            <pointLight position={[0, -7, 0]} intensity={20} />
+            <ambientLight intensity={theme === 'dark' ? 0.1 : 0.5} />
+            <pointLight position={[2, -7, 0]} intensity={theme === 'dark' ? 20 : 35} />
             <group position={[reelPosition, 0, -0.5]}>
-                {photos.map((element, index) => {
-                    return <Photo
-                        focused={index === focusedImage}
-                        index={index}
-                        tilt={index === focusedImage ? tilt : [0, -0.1]}
-                        reelPosition={reelPosition}
-                        key={index}
-                        photo={element}
-                        positionX={index * SPACE_BETWEEN_PHOTOS}
-                        setFocusedImage={setFocusedImage}
-                        dimensions={PHOTO_DIMENSIONS}
-                        setPhotoDetailsPosition={setPhotoDetailsPosition}
-                    />
-                })}
+                {photosElements}
             </group>
         </Canvas>
         <Slider progress={sliderProgress} reference={sliderReference} setInDrag={setSliderInDrag} />

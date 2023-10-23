@@ -52,7 +52,14 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
     }, [reelPosition])
 
     const onMouseOver = (e: ThreeEvent<PointerEvent>) => {
-        if (focused) setPhotoDetailsPosition([e.clientX, e.clientY])
+        if (!focused) return
+        setPhotoDetailsPosition([e.clientX, e.clientY])
+        document.body.style.cursor = 'pointer'
+    }
+
+    const onMouseOut = () => {
+        setPhotoDetailsPosition(null)
+        document.body.style.cursor = ''
     }
 
 
@@ -61,7 +68,7 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
         position={[positionX, 0, 0]}
         rotation={[tilt[0], 0, tilt[1]]}
         onPointerMove={(e) => onMouseOver(e)}
-        onPointerLeave={() => setPhotoDetailsPosition(null)}>
+        onPointerLeave={onMouseOut}>
         <mesh position={[0, 0, 0]}>
             <boxGeometry args={dimensions} />
             <meshStandardMaterial color='white' />

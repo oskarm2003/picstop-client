@@ -1,3 +1,5 @@
+@import url('../../vars.less');
+
 * {
     margin: 0
 }
@@ -12,6 +14,12 @@ canvas {
 }
 
 body {
-    background-color: #111111;
+    background-color: @dark-mode-background;
     overflow-x: hidden;
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: @light-mode-background;
+    }
 }

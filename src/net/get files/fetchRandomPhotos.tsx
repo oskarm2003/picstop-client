@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import * as VARS from '../vars.json'
 import { t_photo_data } from "../../types"
 
@@ -7,12 +7,15 @@ import { t_photo_data } from "../../types"
  * 
  * @param cuantity - how many descriptors to fetch
  */
-export default function useFetchRandomPhotos(cuantity: number) {
+export default function useFetchRandomPhotos():
+    [Array<t_photo_data>, boolean, (cuantity: number) => void] {
 
-    const [photos, setPhotos] = useState<Array<t_photo_data>>()
+    const [photos, setPhotos] = useState<Array<t_photo_data>>([])
+    const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
+    const fetchPhotos = (cuantity: number) => {
 
+        setLoading(true)
         const options = { method: "GET" }
         fetch(VARS.API_URL + '/photo/descriptor/random/' + cuantity, options)
             .then(result => result.json())
@@ -33,9 +36,11 @@ export default function useFetchRandomPhotos(cuantity: number) {
                 setPhotos(output)
             })
             .catch(err => console.log(err))
+            .finally(() => {
+                setLoading(false)
+            })
+    }
 
-    }, [])
-
-    return photos
+    return [photos, loading, fetchPhotos]
 
 }

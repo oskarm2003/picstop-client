@@ -1,0 +1,5 @@
+check safety in wire shark
+fix button loading position translation
+allow space in file names
+forbid tags duplicates
+fix tile content refresh on homepage resize

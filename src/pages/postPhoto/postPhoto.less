@@ -16,6 +16,16 @@
         background-color: @main-background-color;
         border-radius: 10px;
         overflow: hidden;
+        z-index: 0;
     }
 
+    button {
+        z-index: 1;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .post-photo {
+        box-shadow: 0 0 10rem 0 #7f7f7f;
+    }
 }

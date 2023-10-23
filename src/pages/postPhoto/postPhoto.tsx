@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import CanvasBackground from '../../components/common/canvasBackground/canvasBackground';
 import MouseFollower from '../../components/common/mouseFollower/mouseFollower';
 import { setMouseFollowerColorContext } from '../../contexts';
+import getCookie from '../../getCookie';
 
 export default function PostPhoto() {
 
@@ -26,9 +27,28 @@ export default function PostPhoto() {
     })
 
     //change view
-    const onPostSent = (photoName: string) => {
+    const onPhotoSent = (photoName: string) => {
+        //navigate to next screen
+        let author = getCookie('username')
+        if (author === undefined) {
+            navigate('/details/anonymous/' + photoName)
+            return
+        }
         setPostedPhotoName(photoName)
         setDisplay('tags')
+    }
+
+    const onTagsSent = (photoName?: string) => {
+        //navigate to next screen
+        if (photoName === undefined) {
+            navigate('/publicGallery')
+            return
+        }
+        let author = getCookie('username')
+        if (author === undefined) {
+            author = 'anonymous'
+        }
+        navigate('/details/' + author + '/' + photoName)
     }
 
     return <div className='post-photo-wrapper'>
@@ -41,11 +61,13 @@ export default function PostPhoto() {
             }
 
             <setMouseFollowerColorContext.Provider value={setMouseFollowerColor}>
-                {display === 'file' && <PostPhotoForm buttonText="proceed" onSent={onPostSent} />}
-                {display === 'tags' && <TagsForm subtitleColor={mouseFollowerColor ? mouseFollowerColor : '#3f3f3f'} photoName={postedPhotoName} />}
+                {display === 'file' && <PostPhotoForm buttonText="proceed" onSent={onPhotoSent} />}
+                {display === 'tags' && <TagsForm onPostSuccess={onTagsSent} subtitleColor={mouseFollowerColor ? mouseFollowerColor : '#3f3f3f'} photoName={postedPhotoName} />}
             </setMouseFollowerColorContext.Provider>
 
         </div>
-        <CustomButton text='back to browsing' whenClicked={() => navigate('/publicGallery')} justText color='white' ></CustomButton>
+        <CustomButton text='back to browsing' whenClicked={() => navigate('/publicGallery')} justText
+            color='white'
+        ></CustomButton>
     </div>
 }

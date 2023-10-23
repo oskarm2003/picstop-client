@@ -1,3 +1,5 @@
+@import url('../../../vars.less');
+
 @keyframes divFlip {
     0% {
         left: 0;
@@ -56,7 +58,7 @@
 
 @media (prefers-color-scheme: light) {
     .home-background {
-        background-color: #afafaf;
+        background-color: @light-mode-background;
     }
 
     .background-tile {
@@ -67,6 +69,5 @@
                 opacity: 0.8;
             }
         }
-
     }
 }

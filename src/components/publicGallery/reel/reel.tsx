@@ -7,6 +7,7 @@ import Slider from '../slider/slider'
 import Scroller from './scroller'
 import PhotoDetails from '../photoDetails/photoDescription'
 import useDrawUniquePhotos from '../../../net/get files/drawUniquePhotos'
+import Loading from '../../common/loading/loading'
 
 const PHOTO_DIMENSIONS: [number, number, number] = [5, 0, 6]
 const SPACE_BETWEEN_PHOTOS: number = 5
@@ -128,13 +129,20 @@ export default function Reel() {
     }
 
     return <div className="reel" onWheel={(e) => scroll(e)} onMouseMove={(e) => onSliderDrag(e)} onMouseUp={() => setSliderInDrag(false)}>
-        <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} >
-            <ambientLight intensity={theme === 'dark' ? 0.1 : 0.5} />
-            <pointLight position={[2, -7, 0]} intensity={theme === 'dark' ? 20 : 35} />
-            <group position={[reelPosition, 0, -0.5]}>
-                {photosElements}
-            </group>
-        </Canvas>
+        {
+            loading ?
+                <div className='loading-wrapper'>
+                    <Loading color='#cfcfcf' size={1} />
+                </div> :
+
+                <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} >
+                    <ambientLight intensity={theme === 'dark' ? 0.1 : 0.5} />
+                    <pointLight position={[2, -7, 0]} intensity={theme === 'dark' ? 20 : 35} />
+                    <group position={[reelPosition, 0, -0.5]}>
+                        {photosElements}
+                    </group>
+                </Canvas>
+        }
         <Slider progress={sliderProgress} reference={sliderReference} setInDrag={setSliderInDrag} />
         {photoDetailsPosition === null ? null :
             <PhotoDetails photo={photos[focusedImage]} position={photoDetailsPosition} />

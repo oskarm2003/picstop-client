@@ -3,7 +3,7 @@ import CustomButton from "../../common/customButton/customButton";
 import CustomInput from "../../common/customInput/customInput";
 import { useNavigate } from "react-router-dom";
 import { loginViewSetterContext } from "../../../contexts";
-import getUserData from "../../../net/user/getUserData";
+// import getUserData from "../../../net/user/getUserData";
 import useLogin from "../../../net/user/login";
 import useGetUserData from "../../../net/user/getUserData";
 

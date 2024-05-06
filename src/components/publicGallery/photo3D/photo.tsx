@@ -3,6 +3,8 @@ import { t_photo_data } from '../../../types'
 import { TextureLoader } from 'three';
 import { useEffect, useRef, useState } from 'react';
 import { ThreeEvent } from '@react-three/fiber';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Photo({ photo, positionX, focused, index, reelPosition, setPhotoDetailsPosition, dimensions, setFocusedImage, tilt = [0, 0] }:
     { photo: t_photo_data, focused: boolean, index: number, setPhotoDetailsPosition: React.Dispatch<React.SetStateAction<[number, number] | null>>, dimensions: [number, number, number], positionX: number, reelPosition: number, setFocusedImage: React.Dispatch<React.SetStateAction<number>>, tilt?: [number, number] }) {
@@ -11,6 +13,7 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
     const photoRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null)
 
     const url = useFetchFile(photo.name, photo.author)
+    const navigate = useNavigate()
 
     //load photo after url change
     useEffect(() => {
@@ -62,14 +65,19 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
         document.body.style.cursor = ''
     }
 
+    const onClick = () => {
+        if (!focused) return
+        navigate('/details/' + photo.author + '/' + photo.name)
+    }
 
     return <group
         ref={photoRef}
         position={[positionX, 0, 0]}
-        rotation={[tilt[0], 0, tilt[1]]}
-        onPointerMove={(e) => onMouseOver(e)}
-        onPointerLeave={onMouseOut}>
-        <mesh position={[0, 0, 0]}>
+        rotation={[tilt[0], 0, tilt[1]]}>
+        <mesh position={[0, 0, 0]}
+            onPointerMove={(e) => onMouseOver(e)}
+            onPointerLeave={onMouseOut}
+            onPointerUp={onClick}>
             <boxGeometry args={dimensions} />
             <meshStandardMaterial color='white' />
         </mesh>

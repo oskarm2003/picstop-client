@@ -13,7 +13,6 @@ import MouseFollower from '../../common/mouseFollower/mouseFollower'
 export default function Login() {
 
     const [view, setView] = useState<'login' | 'login no-animation' | 'register' | 'password change'>('login')
-    const [canvasWrapper, setCanvasWrapper] = useState<null | HTMLDivElement>(null)
 
     const wrapper = useRef<HTMLDivElement>(null)
     const shadow = useRef<HTMLDivElement>(null)
@@ -24,7 +23,6 @@ export default function Login() {
         if (wrapper.current === null || shadow.current === null) return
         wrapper.current.style.top = '50%'
         shadow.current.style.top = '50%'
-        setCanvasWrapper(wrapper.current)
     }, [])
 
     let to_render = <></>
@@ -42,13 +40,8 @@ export default function Login() {
                         className={'account ' + (view === 'password change' ? 'password-change' : view)}
                         ref={wrapper}>
 
-                        {canvasWrapper != null &&
-                            <>
-                                <CanvasBackground wrapper={canvasWrapper} />
-                                <MouseFollower color={view === 'register' ? '#cf9f7f' : '#99aaff'} container={canvasWrapper} />
-                            </>
-                        }
-
+                        <CanvasBackground />
+                        <MouseFollower color={view === 'register' ? '#cf9f7f' : '#99aaff'} />
                         {to_render}
                     </div>
 

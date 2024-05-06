@@ -2,16 +2,14 @@ import { useState } from "react"
 import getCookie from "../../getCookie"
 import * as VARS from '../vars.json'
 
+
 type t_response = 'error' | 'not signed in' | 'success' | 'authorization failed'
-export default function usePostTags():
-    [t_response | undefined
-        , boolean,
-        (tags_array: string[], photo_name: string) => void] {
+export default function usePostComment(): [boolean, t_response | null, (photo_author: string, photo_name: string, comment: string) => void] {
 
-    const [response, setResponse] = useState<t_response | undefined>()
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState<boolean>(false)
+    const [response, setResponse] = useState<t_response | null>(null)
 
-    const postTags = (tags_array: string[], photo_name: string): void => {
+    const postComment = (photo_author: string, photo_name: string, comment: string) => {
 
         const author = getCookie('username')
         const token = getCookie('token')
@@ -27,13 +25,13 @@ export default function usePostTags():
             method: "POST",
             headers: { "Authorization": "Bearer " + token },
             body: JSON.stringify({
-                photo_author: author,
+                photo_author: photo_author,
                 photo_name: photo_name,
-                tag_names: tags_array
+                content: comment
             })
         }
 
-        fetch(VARS.API_URL + '/tags', options)
+        fetch(VARS.API_URL + '/comment', options)
             .then(result => result.text())
             .then(data => {
                 setLoading(false)
@@ -51,6 +49,6 @@ export default function usePostTags():
 
     }
 
-    return [response, loading, postTags]
+    return [loading, response, postComment]
 
 }

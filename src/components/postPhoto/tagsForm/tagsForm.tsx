@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import CustomButton from '../../common/customButton/customButton'
 import './tagsForm.less'
 import usePostTags from '../../../net/post resources/postTags'
-import { useNavigate } from 'react-router-dom'
-import getCookie from '../../../getCookie'
+// import { useNavigate } from 'react-router-dom'
+// import getCookie from '../../../getCookie'
 
 export default function TagsForm({ photoName, subtitleColor, onPostSuccess }:
     { photoName: string, subtitleColor: string, onPostSuccess: (photoName?: string) => void }) {
@@ -12,7 +12,7 @@ export default function TagsForm({ photoName, subtitleColor, onPostSuccess }:
     const [isEmpty, setIsEmpty] = useState(true)
     const [message, setMessage] = useState('')
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
     const [response, loading, sendRequest] = usePostTags()
 

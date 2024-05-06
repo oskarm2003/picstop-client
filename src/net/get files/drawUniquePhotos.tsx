@@ -30,6 +30,8 @@ export default function useDrawUniquePhotos():
         let _ci = current_index
         let result = new Array()
 
+        setLoading(true)
+
         while (true) {
             const url = `${VARS.API_URL}/photo/search/moduloid/${_ci}/${jump_size}/${quantity - result.length}`
             const response = await fetch(url, { method: 'GET' })
@@ -48,13 +50,13 @@ export default function useDrawUniquePhotos():
                 return
             }
 
-            console.log(data);
+            // console.log(data);
             result = [...result, ...data]
             // console.log(result);
 
 
             if (result.length < quantity) {
-                console.log('modulo ', _ci % jump_size);
+                // console.log('modulo ', _ci % jump_size);
                 _ci = _ci % jump_size + 1
                 if (_ci === init_index) {
                     setLoading(false)

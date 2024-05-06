@@ -1,0 +1,27 @@
+.photo-details-wrapper {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    cursor: default;
+    position: static;
+}
+
+@media (max-aspect-ratio:1/1) {
+
+    .photo-details-wrapper {
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+
+        .photo2D {
+            height: 60vh;
+        }
+
+        .photo-info {
+            width: 90%;
+            height: 100%;
+            margin: 2rem;
+        }
+
+    }
+}

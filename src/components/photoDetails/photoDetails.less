@@ -1,0 +1,164 @@
+@import url('../../vars.less');
+
+.photo2D {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 80vh;
+    font-family: @main-font-family;
+
+    h2 {
+        margin: 1rem;
+        font-size: 1.2rem;
+        font-weight: lighter;
+        color: white;
+
+        span {
+            font-family: @header-font-family;
+            font-weight: bolder;
+            font-style: italic;
+            font-size: 2.5rem;
+            margin-right: 0.5rem;
+        }
+    }
+
+    img {
+        cursor: default;
+        height: 100%;
+    }
+}
+
+.photo-info {
+
+    font-family: @main-font-family;
+    color: white;
+    display: flex;
+    justify-content: center;
+    margin: 5rem 2rem 2rem 2rem;
+    padding: 0 1rem 1rem 1rem;
+    border-radius: 10px;
+    background-color: #cfcfcf0f;
+    position: relative;
+    overflow: hidden;
+    height: 70vh;
+
+    .author-details {
+        position: relative;
+        z-index: 2;
+        padding: 0 1rem;
+        width: 30%;
+
+        .button {
+            background-color: aqua;
+        }
+
+        h2 {
+            font-family: @header-font-family;
+            margin: 1rem 0;
+        }
+
+        .tags {
+            font-size: 1.5rem;
+        }
+
+    }
+
+    .comments-wrapper {
+        position: relative;
+        z-index: 2;
+        background-color: #cfcfcfcf;
+        border-radius: 10px;
+        width: 70%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        h2 {
+            font-family: @header-font-family;
+            margin: 1rem 0;
+        }
+
+        .comments {
+
+            height: 100%;
+            overflow-y: scroll;
+
+            .comment {
+                margin: 1rem;
+                font-size: 1.25rem;
+                color: black;
+
+                b {
+                    margin: 1rem
+                }
+            }
+        }
+
+
+        .write-comment {
+            background-color: #ffffffaf;
+            border-radius: 10px;
+            border: 2px dashed #afafaf;
+            margin: 1rem;
+            display: flex;
+            align-items: flex-end;
+            min-width: 90%;
+
+            textarea {
+                flex-grow: 1;
+                margin: 1rem;
+                border-radius: 10px;
+                border: 1px solid black;
+                height: 4rem;
+                outline: none;
+                font-size: 1.25rem;
+                width: 100%;
+                padding: 0.5rem;
+                font-family: @main-font-family;
+                resize: none;
+            }
+
+            p {
+                font-family: @main-font-family;
+                font-size: 1.2rem;
+                position: relative;
+                top: 1rem;
+                text-align: center;
+            }
+
+        }
+
+    }
+
+}
+
+@media (prefers-color-scheme: light) {
+
+    .photo2D>h2,
+    .photo-info {
+        color: black;
+    }
+}
+
+@media (min-aspect-ratio:1/1) {
+
+    .photo-info {
+        margin: 0 0 1.5rem 0;
+        flex-direction: column;
+        max-width: 35vw;
+
+        .author-details,
+        .comments-wrapper {
+            width: 100%;
+            margin: 1rem 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+    }
+
+}

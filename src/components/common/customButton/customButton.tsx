@@ -1,7 +1,7 @@
 import './customButton.less'
 
-export default function CustomButton({ text, whenClicked, loading, justText, color }:
-    { text: string, whenClicked: () => void, justText?: true, color?: string, loading?: boolean }) {
+export default function CustomButton({ text, whenClicked, loading, justText, color, text_size }:
+    { text: string, whenClicked: () => void, justText?: true, color?: string, loading?: boolean, text_size?: number }) {
 
     let classname = 'custom-button'
     if (justText) {
@@ -19,7 +19,11 @@ export default function CustomButton({ text, whenClicked, loading, justText, col
     }
 
     return <button
-        style={{ color: color }}
+        style={{
+            color: color,
+            textDecoration: justText ? "underline" : "none",
+            fontSize: text_size ? text_size + "rem" : "1.2rem"
+        }}
         className={classname}
         onClick={onClick}>
 

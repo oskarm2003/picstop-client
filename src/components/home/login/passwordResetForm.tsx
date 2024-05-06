@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import CustomInput from "../../common/customInput/customInput";
 import CustomButton from "../../common/customButton/customButton";
-import changePassword from "../../../net/user/changePassword";
+// import changePassword from "../../../net/user/changePassword";
 import { loginContainer, loginViewSetterContext } from "../../../contexts";
 import useChangePassword from "../../../net/user/changePassword";
 

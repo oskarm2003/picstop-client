@@ -1,6 +1,6 @@
 import './postPhoto.less'
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import PostPhotoForm from "../../components/postPhoto/postPhotoForm/postPhotoForm";
 import TagsForm from "../../components/postPhoto/tagsForm/tagsForm";
 import CustomButton from '../../components/common/customButton/customButton';
@@ -14,17 +14,10 @@ export default function PostPhoto() {
 
     const [display, setDisplay] = useState<'file' | 'tags'>('file')
     const [postedPhotoName, setPostedPhotoName] = useState('')
-    const [container, setContainer] = useState<HTMLDivElement | null>(null)
     const [mouseFollowerColor, setMouseFollowerColor] = useState<undefined | string>()
 
     const containerRef = useRef<HTMLDivElement>(null)
     const navigate = useNavigate()
-
-    //load the container
-    useEffect(() => {
-        if (containerRef.current === null) return
-        setContainer(containerRef.current)
-    })
 
     //change view
     const onPhotoSent = (photoName: string) => {
@@ -53,12 +46,9 @@ export default function PostPhoto() {
 
     return <div className='post-photo-wrapper'>
         <div className="post-photo" ref={containerRef}>
-            {container != null &&
-                <>
-                    <CanvasBackground wrapper={container}></CanvasBackground>
-                    <MouseFollower container={container} color={mouseFollowerColor} />
-                </>
-            }
+
+            <CanvasBackground />
+            <MouseFollower color={mouseFollowerColor} />
 
             <setMouseFollowerColorContext.Provider value={setMouseFollowerColor}>
                 {display === 'file' && <PostPhotoForm buttonText="proceed" onSent={onPhotoSent} />}

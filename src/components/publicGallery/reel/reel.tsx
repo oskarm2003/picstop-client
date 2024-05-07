@@ -6,13 +6,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Slider from '../slider/slider'
 import Scroller from './scroller'
 import PhotoDetails from '../photoDetails/photoDescription'
-import useDrawUniquePhotos from '../../../net/get files/drawUniquePhotos'
-import Loading from '../../common/loading/loading'
 
 const PHOTO_DIMENSIONS: [number, number, number] = [5, 0, 6]
 const SPACE_BETWEEN_PHOTOS: number = 5
 
-export default function Reel() {
+export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
 
     const [reelPosition, setReelPosition] = useState(0)
     const [focusedImage, setFocusedImage] = useState(0)
@@ -21,42 +19,33 @@ export default function Reel() {
     const [sliderInDrag, setSliderInDrag] = useState(false)
     const [photoDetailsPosition, setPhotoDetailsPosition] = useState<[number, number] | null>(null)
     const [theme, setTheme] = useState<'light' | 'dark'>('dark')
-    const [photos, setPhotos] = useState<Array<t_photo_data>>([])
-    const [allow_fetch, setAllowFetch] = useState(true)
 
     const sliderReference = useRef<HTMLDivElement>(null)
 
-    //fetch the photos
-    const [result, loading, all_fetched, drawUnique] = useDrawUniquePhotos()
-
     //run on first render
     useEffect(() => {
-        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-            setTheme('light')
-        }
+        if (window.matchMedia('(prefers-color-scheme: light)').matches)
+            setTheme("light")
 
-        drawUnique(30)
+        // to force rerender:
+        setTilt([0, 0])
+
     }, [])
-
-    //update photos on fetch
-    useEffect(() => {
-        if (!Array.isArray(result) || result.length === 0) return
-        setPhotos([...photos, ...result])
-    }, [result])
 
     //on reel position change
     useEffect(() => {
+
         const reelLenght = (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0]))
         setSliderProgress(-reelPosition / reelLenght)
 
-        //load more photos
-        if (sliderProgress > 0.9 && !loading && allow_fetch && !all_fetched) {
-            drawUnique(15)
-            setAllowFetch(false)
-        }
-        else if (sliderProgress <= 0.9) {
-            setAllowFetch(true)
-        }
+        // //load more photos
+        // if (sliderProgress > 0.9 && !loading && allow_fetch && !all_fetched) {
+        //     drawUnique(15)
+        //     setAllowFetch(false)
+        // }
+        // else if (sliderProgress <= 0.9) {
+        //     setAllowFetch(true)
+        // }
 
     }, [reelPosition])
 
@@ -129,20 +118,17 @@ export default function Reel() {
     }
 
     return <div className="reel" onWheel={(e) => scroll(e)} onMouseMove={(e) => onSliderDrag(e)} onMouseUp={() => setSliderInDrag(false)}>
-        {
-            loading ?
-                <div className='loading-wrapper'>
-                    <Loading color='#cfcfcf' size={1} />
-                </div> :
 
-                <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} >
-                    <ambientLight intensity={theme === 'dark' ? 0.1 : 0.5} />
-                    <pointLight position={[2, -7, 0]} intensity={theme === 'dark' ? 20 : 35} />
-                    <group position={[reelPosition, 0, -0.5]}>
-                        {photosElements}
-                    </group>
-                </Canvas>
-        }
+        <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} onLoad={() => {
+            console.log("LOADED NOW!");
+        }} >
+            <ambientLight intensity={theme === 'dark' ? 0.1 : 0.5} />
+            <pointLight position={[2, -7, 0]} intensity={theme === 'dark' ? 30 : 45} />
+            <group position={[reelPosition, 0, -0.5]}>
+                {photosElements}
+            </group>
+        </Canvas>
+
         <Slider progress={sliderProgress} reference={sliderReference} setInDrag={setSliderInDrag} />
         {photoDetailsPosition === null ? null :
             <PhotoDetails photo={photos[focusedImage]} position={photoDetailsPosition} />

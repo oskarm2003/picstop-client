@@ -14,11 +14,10 @@ import * as VARS from '../vars.json'
 
 
 export default function useDrawUniquePhotos():
-    [Array<t_photo_data> | 'error', boolean, boolean, (quantity: number) => void] {
+    [Array<t_photo_data> | 'error', boolean, (quantity: number) => void] {
 
     const [response, setResponse] = useState<Array<t_photo_data> | 'error'>([])
     const [loading, setLoading] = useState<boolean>(false)
-    const [all_fetched, setAllFetched] = useState(false)
 
     //private states
     const jump_size = useMemo(() => Math.floor(Math.random() * 10) + 5, [])
@@ -61,7 +60,6 @@ export default function useDrawUniquePhotos():
                 if (_ci === init_index) {
                     setLoading(false)
                     setResponse(result)
-                    setAllFetched(true)
                     return
                 }
                 if (_ci > jump_size) _ci = 1
@@ -78,6 +76,6 @@ export default function useDrawUniquePhotos():
 
     }
 
-    return [response, loading, all_fetched, drawUnique]
+    return [response, loading, drawUnique]
 
 }

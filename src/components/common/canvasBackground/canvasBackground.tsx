@@ -24,7 +24,9 @@ export default function CanvasBackground({ color }: { color?: string }) {
 
         if (canvas.current === null) return
 
-        const resize_observer = new ResizeObserver(setCanvasDim)
+        const resize_observer = new ResizeObserver(() => {
+            setTimeout(setCanvasDim, 500)
+        })
         resize_observer.observe(canvas.current)
         setCanvasDim()
 

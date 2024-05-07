@@ -4,6 +4,7 @@ import CustomButton from "../common/customButton/customButton"
 import './photoDetails.less'
 import useFetchComments from "../../net/get data/fetchComments"
 import Comment from "./comment"
+import getCookie from "../../getCookie"
 
 export default function Comments({ photo_name, author }:
     { photo_name: string, author: string }) {
@@ -15,6 +16,8 @@ export default function Comments({ photo_name, author }:
 
     type t_message = { content: string, color: string }
     const [message, setMessage] = useState<t_message | null>(null)
+
+    const username = getCookie("username")
 
 
     // on post comment response
@@ -46,19 +49,23 @@ export default function Comments({ photo_name, author }:
     }
 
     return <div className="comments-wrapper">
+        <h2 style={{ textAlign: "center" }}>comments:</h2>
         <div className="comments">
-            <h2 style={{ textAlign: "center" }}>comments:</h2>
-            {comments.map((el) => {
-                return <Comment key={el.id} author={el.author} content={el.content} id={el.id} />
-            })}
+            {
+                comments.length === 0 ? <p className="italics">no comments</p> :
+                    comments.map((el) => {
+                        return <Comment key={el.id} author={el.author} content={el.content} id={el.id} />
+                    })
+            }
         </div>
-
-        <div className="write-comment">
-            <textarea ref={comment_ref} placeholder="leave a comment!" />
-            <div>
-                {message?.content != "" ? <p style={{ color: message?.color }}>{message?.content}</p> : null}
-                <CustomButton text="send" whenClicked={sendComment} loading={loading} />
+        {username === undefined ? null :
+            <div className="write-comment">
+                <textarea ref={comment_ref} placeholder="leave a comment!" />
+                <div>
+                    {message?.content != "" ? <p style={{ color: message?.color }}>{message?.content}</p> : null}
+                    <CustomButton text="send" whenClicked={sendComment} loading={loading} />
+                </div>
             </div>
-        </div>
+        }
     </div>
 }

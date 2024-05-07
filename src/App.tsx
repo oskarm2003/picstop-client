@@ -9,6 +9,7 @@ export default function App() {
     return (
         <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/publicGallery/:searched" element={<PublicGallery />} />
             <Route path="/publicGallery" element={<PublicGallery />} />
             <Route path="/postPhoto" element={<PostPhoto />} />
             <Route path="/details/:author/:filename" element={<PhotoDetails />} />

@@ -17,8 +17,6 @@ export default function PhotoDetails() {
     const { author, filename } = useParams()
     if (author == undefined || filename == undefined) return
 
-    console.log(photo_dimensions);
-
     return <div className='photo-details-wrapper'>
         {photo_dimensions[0] === 0 ?
             <div className="loading-wrapper">

@@ -20,6 +20,7 @@ export default function usePostComment(): [boolean, t_response | null, (photo_au
         }
 
         setLoading(true)
+        setResponse(null)
 
         const options = {
             method: "POST",

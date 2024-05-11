@@ -7,9 +7,11 @@ export default function PhotoDetails({ photo, position }: { photo: t_photo_data,
 
     return <div className="photo-details"
         style={{ left: position[0] + 'px', top: position[1] + 'px' }}>
-        <p><b>name:</b> {photo.name}<br />
-            <b>author:</b> {photo.author}<br />
-            <b>id:</b>{photo.id}</p>
+        <p>
+            <b>author:</b> {photo.author}
+            <br />
+            <b>title:</b> {photo.name}
+        </p>
         <hr />
         <p>click to view details</p>
     </div>

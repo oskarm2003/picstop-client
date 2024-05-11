@@ -43,7 +43,7 @@ export default function Photo2D({ author, photo_name, setMouseColor, setDimensio
         <img ref={fileRef} src={filepath} alt="photo" onLoad={onFileLoad} />
         <br />
         <div className="button-wrapper">
-            <CustomButton color='white' text='back to browsing' justText whenClicked={() => navigate("/publicGallery")} />
+            <CustomButton color='white' text='back to browsing' justText whenClicked={() => navigate("/gallery")} />
         </div>
     </div>
 

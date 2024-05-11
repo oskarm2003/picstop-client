@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import * as VARS from '../vars.json'
 
-type t_user_data = { id: number, username: string, email: string }
+type t_user_data = { id: number, username: string, email: string, update_timestamp?: number, verified?: number }
 export default function useGetUserData(): [undefined | t_user_data, Error | undefined, (user: string | number) => void] {
 
     const [response, setResponse] = useState<t_user_data | undefined>()
@@ -21,7 +21,9 @@ export default function useGetUserData(): [undefined | t_user_data, Error | unde
                 setResponse({
                     id: data.id,
                     username: data.username,
-                    email: data.email
+                    email: data.email,
+                    update_timestamp: data.update_timestamp,
+                    verified: data.verified
                 })
             })
             .catch(err => setError(new Error(err)))

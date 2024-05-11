@@ -46,7 +46,7 @@ export default function Login() {
                     </div>
 
                     <div className='skip-login'>
-                        <CustomButton text='skip login' whenClicked={() => { navigate('/publicGallery') }} justText={true} color='#ffffff' />
+                        <CustomButton text='skip login' whenClicked={() => { navigate('/gallery') }} justText={true} color='#ffffff' />
                     </div>
                     <div ref={shadow} className="shadow"></div>
 

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
 import getCookie from '../../../getCookie';
 import searchIcon from '../../../assets/search.svg'
-import CustomButton from '../../common/customButton/customButton';
 
 export default function UserPanel() {
 
@@ -24,23 +23,22 @@ export default function UserPanel() {
     const search = () => {
         if (searchInput.current === undefined) return
         if (searchInput.current?.value === "")
-            navigate("/publicGallery")
+            navigate("/gallery")
         else
-            navigate("/publicGallery/" + searchInput.current?.value)
+            navigate("/gallery/" + searchInput.current?.value)
     }
 
-    const logOut = () => {
-        document.cookie = 'username=; Max-Age=0'
-        document.cookie = 'token=; Max-Age=0'
-        navigate("/publicGallery")
+    const onUserPanelClick = () => {
+        if (username === undefined) navigate("/")
+        else navigate("/account")
     }
 
     return <div className="panel-wrapper">
 
         <div className="user-panel">
-            <div className="account-wrapper" onClick={() => navigate("/publicGallery/@" + username)}>
+            <div className="account-wrapper" onClick={onUserPanelClick}>
                 <div className="title">
-                    <h1>your work</h1>
+                    <h1>{username === undefined ? "log in" : "account"}</h1>
                 </div>
             </div>
             <div className="post-wrapper" onClick={() => navigate('../postPhoto')}>
@@ -59,7 +57,7 @@ export default function UserPanel() {
             </div>
         </div>
         {username ?
-            <div className='login-panel'><p>logged in as <b>{username}</b></p><CustomButton justText text='log out' whenClicked={logOut} text_size={1.1} color='#cfcfcf' /></div>
+            <div className='login-panel'><p>logged in as <b>{username}</b></p></div>
             : null}
     </div>
 

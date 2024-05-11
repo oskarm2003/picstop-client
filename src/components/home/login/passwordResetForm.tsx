@@ -8,21 +8,19 @@ import useChangePassword from "../../../net/user/changePassword";
 export default function PasswordResetForm() {
 
     const [message, setMessage] = useState<{ color: string, content: string }>({ color: '', content: '' })
-    const [loading, setLoading] = useState(false)
     const emailInput = useRef<HTMLInputElement>(null)
     const setView = useContext(loginViewSetterContext)
     const parentWrapper = useContext(loginContainer)
 
-    const [response, error, requestPasswordChange] = useChangePassword()
+    const [response, loading, requestPasswordChange] = useChangePassword()
 
     useEffect(() => {
         if (response === undefined) return
-        setLoading(false)
-        if (error != undefined) {
+        if (response === "error") {
             setMessage({ color: 'red', content: "error, email might not be verified" })
             return
         }
-        setMessage({ color: 'green', content: 'request sent, check your email' })
+        setMessage({ color: 'green', content: 'request sent! check your mailbox' })
     }, [response])
 
     //send request
@@ -39,7 +37,6 @@ export default function PasswordResetForm() {
             return
         }
 
-        setLoading(true)
         requestPasswordChange(emailInput.current.value)
     }
 

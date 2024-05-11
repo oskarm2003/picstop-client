@@ -21,12 +21,12 @@ export default function PhotoInfo({ author, photo_name, mouse_color, dimensions 
         const ratio = window.innerWidth / window.innerHeight
 
         if (ratio < 1) {
-            el.style.maxHeight = default_dim[1]
-            el.style.maxWidth = dimensions[0] + 'px'
+            el.style.height = default_dim[1]
+            el.style.width = dimensions[0] + 'px'
         }
         else {
-            el.style.maxHeight = dimensions[1] + 'px'
-            el.style.maxWidth = default_dim[0]
+            el.style.height = dimensions[1] + 'px'
+            el.style.width = default_dim[0]
         }
     }, [dimensions])
 
@@ -38,7 +38,7 @@ export default function PhotoInfo({ author, photo_name, mouse_color, dimensions 
     const tags = useFetchTags(photo_name, author)
 
     const authorDetails = () => {
-        navigate("/publicGallery/@" + author)
+        navigate("/gallery/@" + author)
     }
 
     const onDeletePress = () => {
@@ -48,7 +48,7 @@ export default function PhotoInfo({ author, photo_name, mouse_color, dimensions 
     }
 
     useEffect(() => {
-        if (delete_response === "success") navigate("/publicGallery")
+        if (delete_response === "success") navigate("/gallery")
         else if (delete_response === "unauthorized") alert("you are not authorized to perform this action")
         else if (delete_response === "error") alert("error")
     }, [delete_response])

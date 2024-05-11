@@ -20,6 +20,9 @@ export default function Title({ }) {
             justText={true}
             color={view === 'register' ? '#df5f5f' : undefined}
         />
+        {view === "register" ?
+            <p className="note">NOTE: This is an amateur project. Even though I tried to ensure safety of the backend server, please do not use any password from your passwords pool to be extra safe.</p>
+            : null}
     </div>
 
 }

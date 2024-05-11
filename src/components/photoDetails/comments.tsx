@@ -77,10 +77,10 @@ export default function Comments({ photo_name, author }:
     }
 
     return <div className="comments-wrapper">
-        <h2 style={{ textAlign: "center" }}>comments:</h2>
+        <h2>comments:</h2>
         <div className="comments">
             {
-                comments.length === 0 ? <p className="italics" style={{ textAlign: "center" }}>no comments</p> :
+                comments.length === 0 ? <p className="no-comments">no comments yet</p> :
                     comments.map((el) => {
                         return <Comment
                             key={el.id}

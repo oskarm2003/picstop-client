@@ -59,7 +59,7 @@ export default function LoginForm() {
             else {
                 document.cookie = 'username=' + loginInput.current.value
             }
-            navigate('/publicGallery')
+            navigate('/gallery')
         }
     }, [response])
 

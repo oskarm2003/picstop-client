@@ -18,6 +18,7 @@ export default function PostPhoto() {
 
     const containerRef = useRef<HTMLDivElement>(null)
     const navigate = useNavigate()
+    const username = getCookie("username")
 
     //change view
     const onPhotoSent = (photoName: string) => {
@@ -34,7 +35,7 @@ export default function PostPhoto() {
     const onTagsSent = (photoName?: string) => {
         //navigate to next screen
         if (photoName === undefined) {
-            navigate('/publicGallery')
+            navigate('/gallery')
             return
         }
         let author = getCookie('username')
@@ -56,8 +57,18 @@ export default function PostPhoto() {
             </setMouseFollowerColorContext.Provider>
 
         </div>
-        <CustomButton text='back to browsing' whenClicked={() => navigate('/publicGallery')} justText
+        <CustomButton
+            text='back to browsing'
+            whenClicked={() => navigate('/gallery')}
+            justText
             color='white'
         ></CustomButton>
+        {username === undefined ?
+            <p className='warning'>WARNING: Posting as guest user. <br />
+                Photos posted as guest are beyond any control and you will not be able to delete or tag them.
+                The author name is displayed as "anonymous".
+                Anonymous work can get removed without notice.
+            </p> : null
+        }
     </div>
 }

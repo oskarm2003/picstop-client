@@ -65,7 +65,7 @@ export default function PostPhoto() {
         ></CustomButton>
         {username === undefined ?
             <p className='warning'>WARNING: Posting as guest user. <br />
-                Photos posted as guest are beyond any control and you will not be able to delete or tag them.
+                Photos posted as guest are beyond your control and you will not be able to delete or tag them.
                 The author name is displayed as "anonymous".
                 Anonymous work can get removed without notice.
             </p> : null

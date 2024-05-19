@@ -28,13 +28,22 @@
         width: 35rem;
         font-family: @main-font-family;
         font-size: 1.2rem;
-        color: #afafaf
     }
 
+}
+
+@media (prefers-color-scheme: dark) {
+    .warning {
+        color: #afafaf
+    }
 }
 
 @media (prefers-color-scheme: light) {
     .post-photo {
         box-shadow: 0 0 10rem 0 #7f7f7f;
+    }
+
+    .warning {
+        color: black;
     }
 }

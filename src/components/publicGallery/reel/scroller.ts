@@ -1,66 +1,62 @@
-let SPEED = 0
-
 /**
  * Scroller class to scroll reel with velocity that can be appended any time
  */
 export default class Scroller {
 
-    allowSpeedReduce: boolean
+    noReduceCountdown: number
     minPos: number
     maxPos: number
+    speed: number
 
     constructor(minPos: number, maxPos: number) {
-        this.allowSpeedReduce = true
         this.minPos = minPos
         this.maxPos = maxPos
+        this.noReduceCountdown = 0
+        this.speed = 0
     }
 
     addSpeed(value: number) {
-        this.allowSpeedReduce = false
-        SPEED += value
-        setTimeout(() => { this.allowSpeedReduce = true }, 100)
+        this.noReduceCountdown = 10
+        this.speed += value
     }
 
     private reduceSpeed(value: number) {
-        if (this.allowSpeedReduce) {
-            SPEED -= value
-        }
-    }
-
-    getSpeed() {
-        return SPEED
+        if (this.noReduceCountdown == 0)
+            this.speed -= value
+        else
+            this.noReduceCountdown--
     }
 
     run(setReelPosition: React.Dispatch<React.SetStateAction<number>>, reelPosition: number) {
 
         // check if should stop
-        if (Math.abs(SPEED) < 0.001) {
-            SPEED = 0
+        if (Math.abs(this.speed) < 0.001) {
+            this.speed = 0
             return
         }
 
         //change reel position
-        const newReelPosition = reelPosition - SPEED
+        const newReelPosition = reelPosition - this.speed
 
         //check if in range
         if (-newReelPosition < this.minPos) {
             setReelPosition(0)
-            SPEED = 0
+            this.speed = 0
             return
         }
+
         if (-newReelPosition > this.maxPos) {
             setReelPosition(-this.maxPos)
-            SPEED = 0
+            this.speed = 0
             return
         }
 
         //update
         setReelPosition(newReelPosition)
-        this.reduceSpeed(Math.sign(SPEED) * 0.01)
+        this.reduceSpeed(Math.sign(this.speed) * 0.01)
 
         //recurency
-        setTimeout(() => {
-            this.run(setReelPosition, newReelPosition)
-        }, 1)
+        if (this.speed != 0)
+            requestAnimationFrame(() => this.run(setReelPosition, newReelPosition))
     }
 }

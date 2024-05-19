@@ -24,7 +24,7 @@ export default function BackgroundTile({ size, photo }: { size: number, photo: t
 
     return <div className="background-tile" style={{ width: size + 'rem' }} onMouseEnter={mouseEnter}>
         <div ref={childDiv}>
-            <img src={file} alt="image" style={{ display: shown ? 'block' : 'none' }} />
+            <img src={file} alt="fetching image..." style={{ display: shown ? 'block' : 'none' }} />
         </div>
     </div>
 

@@ -7,18 +7,18 @@ import Slider from '../slider/slider'
 import Scroller from './scroller'
 import PhotoDetails from '../photoDetails/photoDescription'
 
-const PHOTO_DIMENSIONS: [number, number, number] = [5, 0, 6]
+const PHOTO_DIMENSIONS: [number, number, number] = [5, 0, 6] //width, depth, height
 const SPACE_BETWEEN_PHOTOS: number = 5
 
 export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
 
-    const [reelPosition, setReelPosition] = useState(0)
-    const [focusedImage, setFocusedImage] = useState(0)
-    const [tilt, setTilt] = useState<[number, number]>([0, 0])
-    const [sliderProgress, setSliderProgress] = useState(0)
-    const [sliderInDrag, setSliderInDrag] = useState(false)
-    const [photoDetailsPosition, setPhotoDetailsPosition] = useState<[number, number] | null>(null)
+    const [reel_position, setReelPosition] = useState(0)
+    const [focused_image, setFocusedImage] = useState(0)
+    const [slider_progress, setSliderProgress] = useState(0)
+    const [slider_in_drag, setSliderInDrag] = useState(false)
+    const [photo_detail_position, setPhotoDetailsPosition] = useState<[number, number] | null>(null)
     const [theme, setTheme] = useState<'light' | 'dark'>('dark')
+    const [tilt, setTilt] = useState<[number, number]>([0, 0])
 
     const sliderReference = useRef<HTMLDivElement>(null)
 
@@ -36,39 +36,46 @@ export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
     useEffect(() => {
 
         const reelLenght = (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0]))
-        setSliderProgress(-reelPosition / reelLenght)
+        setSliderProgress(-reel_position / reelLenght)
 
         // //load more photos
-        // if (sliderProgress > 0.9 && !loading && allow_fetch && !all_fetched) {
+        // if (slider_progress > 0.9 && !loading && allow_fetch && !all_fetched) {
         //     drawUnique(15)
         //     setAllowFetch(false)
         // }
-        // else if (sliderProgress <= 0.9) {
+        // else if (slider_progress <= 0.9) {
         //     setAllowFetch(true)
         // }
 
-    }, [reelPosition])
+    }, [reel_position])
 
-    //set the photos to view
+    //load only the photos within visibility range
     const photosElements = useMemo(() => {
-        const toMap = photos.slice(0, Math.floor(Math.abs(reelPosition / SPACE_BETWEEN_PHOTOS)) + 5)
-        return toMap.map((element, index) => {
-            //optimalization - view only in range
-            if (Math.abs(index * SPACE_BETWEEN_PHOTOS + reelPosition) > SPACE_BETWEEN_PHOTOS * 5) return
+
+        //assumed
+        const max_inview_photos = 10
+
+        const index_first = Math.max(focused_image - Math.ceil(max_inview_photos / 2), 0)
+        const index_last = Math.min(focused_image + Math.ceil(max_inview_photos / 2), photos.length)
+        const photos_fragment = photos.slice(index_first, index_last)
+
+        return photos_fragment.map((element, index) => {
+
             return <Photo
-                focused={index === focusedImage}
                 index={index}
-                tilt={index === focusedImage ? tilt : [0, -0.1]}
-                reelPosition={reelPosition}
                 key={index}
+                focused={index === focused_image}
+                tilt={index === focused_image ? tilt : [0, -0.1]}
+                reel_position={reel_position}
                 photo={element}
-                positionX={index * SPACE_BETWEEN_PHOTOS}
+                x_position={index * SPACE_BETWEEN_PHOTOS}
                 setFocusedImage={setFocusedImage}
                 dimensions={PHOTO_DIMENSIONS}
                 setPhotoDetailsPosition={setPhotoDetailsPosition}
             />
         })
-    }, [reelPosition, tilt])
+    }, [reel_position, tilt])
+
 
     const onMouseMove = (e: React.MouseEvent<HTMLElement>) => {
         //set photo tilt
@@ -76,12 +83,15 @@ export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
         const x = window.innerWidth / max_tilt
         const y = window.innerHeight / max_tilt
 
-        setTilt([(e.clientY - window.innerHeight / 2) / y, (e.clientX - window.innerWidth / 2) / x])
+        setTilt([
+            (e.clientY - window.innerHeight / 2) / y,
+            (e.clientX - window.innerWidth / 2) / x]
+        )
     }
 
     const onSliderDrag = (e: React.MouseEvent<HTMLElement>) => {
         //on slider drag
-        if (sliderInDrag) {
+        if (slider_in_drag) {
             if (sliderReference.current === null) return
             const reelLenght = (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0]))
 
@@ -105,13 +115,15 @@ export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
         }
     }
 
-    const scroller = new Scroller(0, (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0])))
+    const scroller = useMemo(() => new Scroller(0, (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0]))), [])
     const scroll = (e: React.WheelEvent<HTMLDivElement>) => {
-        if ((sliderProgress < 0 && e.deltaY < 0) || (sliderProgress > 1 && e.deltaY > 0)) return
+
+        scroller.maxPos = (photos.length - 1) * (PHOTO_DIMENSIONS[0] + (SPACE_BETWEEN_PHOTOS - PHOTO_DIMENSIONS[0]))
+        if ((slider_progress < 0 && e.deltaY < 0) || (slider_progress > 1 && e.deltaY > 0)) return
         //if no speed
-        if (scroller.getSpeed() === 0) {
+        if (scroller.speed === 0) {
             scroller.addSpeed(Math.sign(e.deltaY) * 0.05)
-            scroller.run(setReelPosition, reelPosition)
+            scroller.run(setReelPosition, reel_position)
             return
         }
         scroller.addSpeed(Math.sign(e.deltaY) * 0.05)
@@ -119,19 +131,17 @@ export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
 
     return <div className="reel" onWheel={(e) => scroll(e)} onMouseMove={(e) => onSliderDrag(e)} onMouseUp={() => setSliderInDrag(false)}>
 
-        <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} onLoad={() => {
-            console.log("LOADED NOW!");
-        }} >
+        <Canvas camera={{ position: [0, -10, 0] }} onMouseMove={onMouseMove} >
             <ambientLight intensity={theme === 'dark' ? 0.1 : 0.5} />
             <pointLight position={[2, -7, 0]} intensity={theme === 'dark' ? 30 : 45} />
-            <group position={[reelPosition, 0, -0.5]}>
+            <group position={[reel_position, 0, -0.5]}>
                 {photosElements}
             </group>
         </Canvas>
 
-        <Slider progress={sliderProgress} reference={sliderReference} setInDrag={setSliderInDrag} />
-        {photoDetailsPosition === null ? null :
-            <PhotoDetails photo={photos[focusedImage]} position={photoDetailsPosition} />
+        <Slider progress={slider_progress} reference={sliderReference} setInDrag={setSliderInDrag} />
+        {photo_detail_position === null ? null :
+            <PhotoDetails photo={photos[focused_image]} position={photo_detail_position} />
         }
     </div>
 

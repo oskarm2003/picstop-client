@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from "react"
-import usePostComment from "../../net/post resources/postComment"
-import CustomButton from "../common/customButton/customButton"
+import { useContext, useEffect, useRef, useState } from "react"
 import './photoDetails.less'
 import useFetchComments from "../../net/get data/fetchComments"
 import Comment from "./comment"
-import getCookie from "../../getCookie"
-import usePatchComment from "../../net/post resources/patchComment"
+import WriteComment from "./writeComment"
+import { photoDataContext } from "../../contexts"
+import { commentContentContext, setCommentContentContext } from "../../contexts"
 
-export default function Comments({ photo_name, author }:
-    { photo_name: string, author: string }) {
 
-    const [loading, response, postComment] = usePostComment()
-    const [edit_response, edit_loading, editComment] = usePatchComment()
+export default function Comments() {
+
+    const [editID, setEditID] = useState<number | null>(null)
+    const [write_top_shift, setWriteTopShift] = useState<number>(0)
+    const [written_comment_content, setWrittenCommentContent] = useState<string>("")
+
+    const wrapper_ref = useRef<HTMLDivElement>(null)
+
     const [comments, loadComments] = useFetchComments()
 
-    type t_message = { content: string, color: string }
-    const [message, setMessage] = useState<t_message | null>(null)
-    const [editID, setEditID] = useState<number | null>(null)
-
-    const comment_ref = useRef<HTMLTextAreaElement>(null)
-    const username = getCookie("username")
+    const photo_data = useContext(photoDataContext)
+    if (photo_data === null) return null
+    const [author, photo_name] = [photo_data.author_name, photo_data.photo_name]
 
     const reloadComments = () => {
         loadComments(photo_name, author)
@@ -27,81 +27,38 @@ export default function Comments({ photo_name, author }:
 
     useEffect(() => {
         reloadComments()
+        window.onscroll = calcWriteCommentPosition
     }, [])
 
-    // on post comment response
-    useEffect(() => {
-        if (response === null) return
-        else if (response === 'success') {
-            setMessage({ color: "green", content: "success" })
-            if (comment_ref.current != null) { comment_ref.current.value = "" }
-            reloadComments()
-        }
-        else if (response === 'authorization failed') setMessage({ color: "red", content: "authorization failed" })
-        else setMessage({ color: "red", content: "error" })
-    }, [response])
-
-    // on edit comment response
-    useEffect(() => {
-        if (edit_response === null) return
-        else if (edit_response === 'success') {
-            setMessage({ color: "green", content: "success" })
-            if (comment_ref.current != null) { comment_ref.current.value = "" }
-            reloadComments()
-        }
-        else if (edit_response === "not found") setMessage({ color: "red", content: "comment not found" })
-        else if (edit_response === 'unauthorized') setMessage({ color: "red", content: "authorization failed" })
-        else setMessage({ color: "red", content: "error" })
-    }, [edit_response])
-
-    // on send button click
-    const sendComment = () => {
-        if (comment_ref.current === null) return
-        const comment_content = comment_ref.current.value
-        if (comment_content.trim() === "") {
-            setMessage({ color: "red", content: "empty comment" })
-            return
-        }
-
-        if (editID === null)
-            postComment(author, photo_name, comment_content)
-        else
-            editComment(editID, comment_content)
+    const calcWriteCommentPosition = () => {
+        if (wrapper_ref.current === null) return
+        setWriteTopShift(-(wrapper_ref.current.getBoundingClientRect().bottom - window.innerHeight))
     }
 
-    // set the content of comment editor
-    const setText = (text: string) => {
-        if (comment_ref.current === null) return
-        comment_ref.current.value = text
-        comment_ref.current.focus()
-    }
+    return <setCommentContentContext.Provider value={setWrittenCommentContent}>
+        <commentContentContext.Provider value={written_comment_content}>
 
-    return <div className="comments-wrapper">
-        <h2>comments:</h2>
-        <div className="comments">
-            {
-                comments.length === 0 ? <p className="no-comments">no comments yet</p> :
-                    comments.map((el) => {
-                        return <Comment
-                            key={el.id}
-                            author={el.author}
-                            content={el.content}
-                            id={el.id}
-                            reloadComments={reloadComments}
-                            setEditID={setEditID}
-                            setText={setText}
-                        />
-                    })
-            }
-        </div>
-        {username === undefined ? null :
-            <div className="write-comment">
-                <textarea ref={comment_ref} placeholder={editID != null ? "edit the comment" : "leave a comment!"} />
-                <div>
-                    {message?.content != "" ? <p style={{ color: message?.color }}>{message?.content}</p> : null}
-                    <CustomButton text={editID != null ? "edit" : "send"} whenClicked={sendComment} loading={loading && edit_loading} />
+            <div className="comments-wrapper" ref={wrapper_ref} style={{ borderTop: author === "anonymous" ? "none" : "2px dashed black" }}>
+                <h2>comments:</h2>
+                <div className="comments">
+                    {
+                        comments.length === 0 ? <p className="no-comments">No comments yet... You can be the first to comment this artwork!</p> :
+                            comments.map((el) => {
+                                return <Comment
+                                    key={el.id}
+                                    author={el.author}
+                                    content={el.content}
+                                    id={el.id}
+                                    reloadComments={reloadComments}
+                                    setEditID={setEditID}
+                                />
+                            })
+                    }
                 </div>
+                <WriteComment top_shift={write_top_shift} editID={editID} author={author} photo_name={photo_name} reloadComments={reloadComments} />
             </div>
-        }
-    </div>
+
+        </commentContentContext.Provider>
+    </setCommentContentContext.Provider>
+
 }

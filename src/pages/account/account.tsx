@@ -7,7 +7,7 @@ export default function Account() {
 
     const navigate = useNavigate()
 
-    return <div className="account-wrapper">
+    return <div className="page-account-wrapper">
         <AccountPanel />
         <CustomButton
             text="back to browsing"

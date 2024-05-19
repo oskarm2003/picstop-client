@@ -6,8 +6,18 @@ import { ThreeEvent } from '@react-three/fiber';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function Photo({ photo, positionX, focused, index, reelPosition, setPhotoDetailsPosition, dimensions, setFocusedImage, tilt = [0, 0] }:
-    { photo: t_photo_data, focused: boolean, index: number, setPhotoDetailsPosition: React.Dispatch<React.SetStateAction<[number, number] | null>>, dimensions: [number, number, number], positionX: number, reelPosition: number, setFocusedImage: React.Dispatch<React.SetStateAction<number>>, tilt?: [number, number] }) {
+export default function Photo({ photo, x_position, focused, index, reel_position, tilt, setPhotoDetailsPosition, dimensions, setFocusedImage, }:
+    {
+        photo: t_photo_data,
+        focused: boolean,
+        index: number,
+        setPhotoDetailsPosition: React.Dispatch<React.SetStateAction<[number, number] | null>>,
+        dimensions: [number, number, number],
+        x_position: number,
+        reel_position: number,
+        setFocusedImage: React.Dispatch<React.SetStateAction<number>>,
+        tilt: [number, number]
+    }) {
 
     const [textureMap, setTextureMap] = useState<THREE.Texture | null>(null)
     const photoRef = useRef<THREE.Group<THREE.Object3DEventMap>>(null)
@@ -24,9 +34,8 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
         })
     }, [url])
 
-
     useEffect(() => {
-        const canvasPosition = positionX + reelPosition
+        const canvasPosition = x_position + reel_position
         if (photoRef.current === null) return
 
         const range = 3
@@ -52,7 +61,7 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
             return
         }
 
-    }, [reelPosition])
+    }, [reel_position])
 
     const onMouseOver = (e: ThreeEvent<PointerEvent>) => {
         if (!focused) return
@@ -72,7 +81,7 @@ export default function Photo({ photo, positionX, focused, index, reelPosition, 
 
     return <group
         ref={photoRef}
-        position={[positionX, 0, 0]}
+        position={[x_position, 0, 0]}
         rotation={[tilt[0], 0, tilt[1]]}>
         <mesh position={[0, 0, 0]}
             onPointerMove={(e) => onMouseOver(e)}

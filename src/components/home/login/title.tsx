@@ -15,13 +15,13 @@ export default function Title({ }) {
     return <div className="title">
         <h1>{view === 'register' ? 'Sign up' : 'Sign in'}</h1>
         <CustomButton
-            text={view === 'register' ? '[ back to login ]' : '[ create account first ]'}
+            text={view === 'register' ? '☞ back to login' : '☞ create account instead'}
             whenClicked={switchViews}
             justText={true}
             color={view === 'register' ? '#df5f5f' : undefined}
         />
         {view === "register" ?
-            <p className="note">NOTE: This is an amateur project. Even though I tried to ensure safety of the backend server, please do not use any password from your passwords pool to be extra safe.</p>
+            <p className="note">NOTE: This is an amateur project. Even though I tried to ensure safety of the backend server, please do not use any passwords from your password pool to be extra safe.</p>
             : null}
     </div>
 

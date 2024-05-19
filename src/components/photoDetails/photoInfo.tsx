@@ -1,34 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../common/customButton/customButton";
-import CanvasBackground from "../common/canvasBackground/canvasBackground";
-import MouseFollower from "../common/mouseFollower/mouseFollower";
 import useFetchTags from "../../net/get data/fetchTags";
 import Comments from "./comments";
 import getCookie from "../../getCookie";
 import useDeletePhoto from "../../net/remove resources/deletePhoto";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
+import { photoDataContext } from "../../contexts";
 
-const default_dim = ["25vw", "25vh"]
+export default function PhotoInfo() {
 
-export default function PhotoInfo({ author, photo_name, mouse_color, dimensions }:
-    { author: string, photo_name: string, mouse_color: string, dimensions: [number, number] }) {
-
-    const wrapper_ref = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        const el = wrapper_ref.current
-        if (el === null) return
-
-        const ratio = window.innerWidth / window.innerHeight
-
-        if (ratio < 1) {
-            el.style.height = default_dim[1]
-            el.style.width = dimensions[0] + 'px'
-        }
-        else {
-            el.style.height = dimensions[1] + 'px'
-            el.style.width = default_dim[0]
-        }
-    }, [dimensions])
+    const photo_data = useContext(photoDataContext)
+    if (photo_data === null) return null
+    const [author, photo_name] = [photo_data.author_name, photo_data.photo_name]
 
     //get logged user
     const username = getCookie('username')
@@ -53,34 +36,28 @@ export default function PhotoInfo({ author, photo_name, mouse_color, dimensions 
         else if (delete_response === "error") alert("error")
     }, [delete_response])
 
-    return <div className="photo-info" ref={wrapper_ref}>
+    return <div className="photo-info">
 
-        <CanvasBackground color="#0000001f" />
-        <MouseFollower color={mouse_color} />
         {author === "anonymous" ? null :
             <div className="author-details">
-                {
-                    username === author ?
-                        <>
-                            <h2 style={{ marginBottom: 0 }}>This work is your's</h2>
-                            <CustomButton text="delete photo" whenClicked={onDeletePress} />
-                        </>
-                        :
-                        <>
-                            <h2>Author's Profile:</h2>
-                            <CustomButton text={author + "'s gallery"} color="#af5f9f" justText whenClicked={authorDetails} text_size={1.5} />
-                        </>
-
-                }
-                <h2>Tags:</h2>
+                <h2>artwork details:</h2>
                 <p className="tags">
-                    {tags.length == 0 ? <span className="italics">no tags</span> : tags.map((el) => {
+                    {tags.map((el) => {
                         return "#" + el + " "
                     })}
                 </p>
+                <div className="buttons">
+                    <CustomButton text={`☞ visit ${author}'s gallery`} color="#8f8fff" justText whenClicked={authorDetails} />
+                    {
+                        username === author ?
+                            <CustomButton justText color="red" text="delete photo" whenClicked={onDeletePress} />
+                            :
+                            null
+                    }
+                </div>
             </div>
         }
-        <Comments photo_name={photo_name} author={author} />
+        <Comments />
     </div>
 
 }

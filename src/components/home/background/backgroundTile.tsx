@@ -3,7 +3,7 @@ import './backgroundStyle.less'
 import { t_photo_data } from '../../../types'
 import useFetchFile from '../../../net/get files/fetchFile'
 
-export default function BackgroundTile({ size, photo }: { size: number, photo: t_photo_data }) {
+export default function BackgroundTile({ top_text, size, photo }: { top_text: string, size: number, photo: t_photo_data }) {
 
     const [shown, setShown] = useState(false)
     const childDiv = useRef<HTMLDivElement>(null)
@@ -24,7 +24,8 @@ export default function BackgroundTile({ size, photo }: { size: number, photo: t
 
     return <div className="background-tile" style={{ width: size + 'rem' }} onMouseEnter={mouseEnter}>
         <div ref={childDiv}>
-            <img src={file} alt="fetching image..." style={{ display: shown ? 'block' : 'none' }} />
+            <p style={{ display: shown ? 'none' : 'block' }}>{top_text}</p>
+            <img src={file} alt="image not found" style={{ display: shown ? 'block' : 'none' }} />
         </div>
     </div>
 

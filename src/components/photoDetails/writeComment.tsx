@@ -8,8 +8,8 @@ import { commentContentContext } from "../../contexts"
 
 const MAX_COMMENT_LEN = 512
 
-export default function WriteComment({ top_shift, author, photo_name, reloadComments, editID }:
-    { top_shift: number, author: string, photo_name: string, reloadComments: () => void, editID: number | null }
+export default function WriteComment({ top_shift, author, photo_name, reloadComments, editID, setEditID }:
+    { top_shift: number, author: string, photo_name: string, reloadComments: () => void, editID: number | null, setEditID: React.Dispatch<React.SetStateAction<number | null>> }
 ) {
 
     const comment_content = useContext(commentContentContext)
@@ -51,6 +51,9 @@ export default function WriteComment({ top_shift, author, photo_name, reloadComm
             reloadComments()
         }
         else if (response === 'authorization failed') setMessage({ color: "red", content: "authorization failed" })
+        else if (response === 'conflict') setMessage({ color: "red", content: "one comment per user allowed" })
+        else if (response === 'not found') setMessage({ color: "red", content: "photo not found" })
+        else if (response === 'not signed in') setMessage({ color: "red", content: "sign in" })
         else setMessage({ color: "red", content: "error" })
     }, [response])
 
@@ -89,7 +92,7 @@ export default function WriteComment({ top_shift, author, photo_name, reloadComm
         else
             editComment(editID, comment_content)
 
-        // setEditID(null)
+        setEditID(null)
 
     }
 

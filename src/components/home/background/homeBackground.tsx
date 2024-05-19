@@ -19,7 +19,7 @@ export default function HomeBackground({ vertical_density }: { vertical_density:
     const tiles = useMemo(() => {
         const arr: Array<number> = new Array()
         for (let i = 0; i < (vertical_density + 1) * horizontal_density; i++) {
-            let num = Math.floor(Math.random() * 7)
+            let num = Math.floor(Math.random() * 6)
             arr.push(num)
         }
         return arr
@@ -42,10 +42,14 @@ export default function HomeBackground({ vertical_density }: { vertical_density:
     }, [response])
 
     const photo_mock: t_photo_data = { id: 0, name: '', timestamp: 0, album: '', author: '' }
+    // const title_text = "Pic Stop."
+    const title_text = "PIC_STOP."
+    let skipped = 0
 
     return <div className="home-background" style={{ width: horizontal_density * tile_space }}>
         {tiles.map((value, index) => {
             if (value === 0) {
+                skipped += 1
                 return (
                     <div
                         key={index}
@@ -54,7 +58,11 @@ export default function HomeBackground({ vertical_density }: { vertical_density:
                     </div>
                 )
             }
-            return <BackgroundTile key={index} size={size} photo={photos.length != 0 ? photos[Math.floor(Math.random() * photos.length)] : photo_mock} />
+            return <BackgroundTile
+                top_text={index > title_text.length ? "" : title_text[index - skipped]}
+                key={index}
+                size={size}
+                photo={photos.length != 0 ? photos[Math.floor(Math.random() * photos.length)] : photo_mock} />
         })}
     </div>
 

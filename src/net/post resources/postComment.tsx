@@ -3,7 +3,7 @@ import getCookie from "../../getCookie"
 import * as VARS from '../vars.json'
 
 
-type t_response = 'error' | 'not signed in' | 'success' | 'authorization failed'
+type t_response = 'error' | 'not signed in' | 'success' | 'authorization failed' | 'conflict' | 'not found'
 export default function usePostComment(): [boolean, t_response | null, (photo_author: string, photo_name: string, comment: string) => void] {
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -33,20 +33,23 @@ export default function usePostComment(): [boolean, t_response | null, (photo_au
         }
 
         fetch(VARS.API_URL + '/comment', options)
-            .then(result => result.text())
-            .then(data => {
-                setLoading(false)
-                if (data === 'success' || data === 'authorization failed') {
-                    setResponse(data)
-                    return
-                }
-                throw new Error('unexpected server response')
+            .then(result => {
+                if (result.status == 409)
+                    setResponse("conflict")
+                else if (result.status === 201)
+                    setResponse("success")
+                else if (result.status === 401)
+                    setResponse("authorization failed")
+                else if (result.status === 404)
+                    setResponse("not found")
+                else
+                    throw new Error('unexpected server response')
             })
             .catch(err => {
-                setLoading(false)
                 console.error(err)
                 setResponse('error')
             })
+            .finally(() => setLoading(false))
 
     }
 

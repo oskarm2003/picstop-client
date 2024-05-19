@@ -55,7 +55,7 @@ export default function Comments() {
                             })
                     }
                 </div>
-                <WriteComment top_shift={write_top_shift} editID={editID} author={author} photo_name={photo_name} reloadComments={reloadComments} />
+                <WriteComment setEditID={setEditID} top_shift={write_top_shift} editID={editID} author={author} photo_name={photo_name} reloadComments={reloadComments} />
             </div>
 
         </commentContentContext.Provider>

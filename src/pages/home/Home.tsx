@@ -6,6 +6,7 @@ export default function Home() {
 
     return (
         <>
+            {/* <h1 className="app-title">PicStop</h1> */}
             <HomeBackground vertical_density={10} />
             <Login></Login>
         </>

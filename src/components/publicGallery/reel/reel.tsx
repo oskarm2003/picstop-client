@@ -61,6 +61,8 @@ export default function Reel({ photos }: { photos: Array<t_photo_data> }) {
 
         return photos_fragment.map((element, index) => {
 
+            index += index_first
+
             return <Photo
                 index={index}
                 key={index}

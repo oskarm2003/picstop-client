@@ -76,6 +76,7 @@ export default function Photo({ photo, x_position, focused, index, reel_position
 
     const onClick = () => {
         if (!focused) return
+        document.body.style.cursor = ''
         navigate('/details/' + photo.author + '/' + photo.name)
     }
 

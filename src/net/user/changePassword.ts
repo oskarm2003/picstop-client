@@ -23,11 +23,11 @@ export default function useChangePassword(): [t_change_password_response | undef
 
         fetch(VARS.API_URL + '/user/change_password/request', options)
             .then(data => {
-                if (data.statusText === 'No Content') {
+                if (data.status === 204) {
                     setResponse('success')
                 }
                 else {
-                    throw 'Failed to send the request'
+                    throw "email error - not found or not verified"
                 }
             })
             .catch(err => {

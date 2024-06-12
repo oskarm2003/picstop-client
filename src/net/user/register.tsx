@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import * as VARS from '../vars.json'
 
-type t_response_status_text = 'Conflict' | 'Created' | 'Unprocessable Entity' | 'Error'
+type t_response_status_text = 'Conflict' | 'Created' | 'Unprocessable Entity' | 'Taken' | 'Error'
 export default function useRegister(): [t_response_status_text | undefined, (username: string, email: string, password: string) => void] {
 
     const [response, setResponse] = useState<undefined | t_response_status_text>()
@@ -21,10 +21,19 @@ export default function useRegister(): [t_response_status_text | undefined, (use
 
         fetch(VARS.API_URL + '/user/new', options)
             .then(async response => {
-                if (response.statusText != 'Created' && response.statusText != 'Conflict' && response.statusText != 'Unprocessable Entity') {
-                    throw new Error('unexpected server response')
+                switch (response.status) {
+                    case 201:
+                        setResponse("Created")
+                        break;
+                    case 409:
+                        setResponse("Conflict")
+                        break;
+                    case 418:
+                        setResponse("Unprocessable Entity")
+                        break;
+                    default:
+                        throw new Error("REGISTER ERROR: unexpected server response")
                 }
-                setResponse(response.statusText)
             })
             .catch(err => {
                 console.error(err)

@@ -23,7 +23,7 @@ export default function RegisterForm() {
             setMessage({ color: "green", content: "account successfully created" })
         }
         else if (response === 'Conflict') {
-            setMessage({ color: "red", content: "username or email taken" })
+            setMessage({ color: "red", content: "username or email already in use" })
         }
         else if (response === 'Unprocessable Entity') {
             setMessage({ color: "red", content: "invalid input" })

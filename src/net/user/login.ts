@@ -34,12 +34,20 @@ export default function useLogin(): [undefined | t_login_result, (login: string,
         //make the request
         fetch(VARS.API_URL + '/user/login', options)
             .then(async response => {
-                if (response.statusText === 'OK') {
-                    setResponse({ token: await response.text() })
+                switch (response.status) {
+                    case 200:
+                        setResponse({ token: await response.text() })
+                        break;
+                    case 404:
+                        setResponse("Not Found")
+                        break
+                    case 401:
+                        setResponse("Unauthorized")
+                        break;
+                    default:
+                        throw new Error("LOGIN ERROR: unexpected server response")
                 }
-                else if (response.statusText === 'Not Found' || response.statusText === 'Unauthorized') {
-                    setResponse(response.statusText)
-                }
+
             })
             .catch(err => {
                 console.error(err)

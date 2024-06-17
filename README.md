@@ -1,7 +1,5 @@
 # About
-PicStop is an application for posting, viewing and commenting photos.
-
-This is frontend for PicStop.    
+This is frontend for PicStop - an application for posting, viewing and commenting photos.    
 Users can create accounts and post photos that are saved by the server.  
 App uses the custom API (https://github.com/oskarm2003/photos-API)
 
